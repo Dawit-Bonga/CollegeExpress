@@ -317,7 +317,7 @@ async def generate_roadmap(request: Request, current_user = Depends(get_current_
       
       
 @app.post("/essay")
-@limiter.limit("3/minute")
+@limiter.limit("5/hour")
 async def grade_essay(request: Request, current_user = Depends(get_current_user)):
     data = await request.json()
     grade = data.get("grade")
