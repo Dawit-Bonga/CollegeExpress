@@ -1,64 +1,113 @@
-## Roadmap Gen
+# Roadmap Gen
 
-Full‑stack app for generating personalized high‑school roadmaps and essay feedback with user authentication.
+Roadmap Gen is an AI-powered college planning website built to help students navigate the college application process with more clarity and confidence. Instead of making students piece together advice from scattered sources, the app brings personalized roadmaps, essay feedback, and scholarship discovery into one place.
 
-### Stack
+The goal is simple: give students a practical, supportive system for planning their academic path, improving their essays, and staying organized throughout the admissions journey.
 
-- **Backend**: FastAPI, Uvicorn, OpenAI API, Supabase
-- **Frontend**: React + Vite, Tailwind CSS
-- **Database**: Supabase (PostgreSQL)
-- **Auth**: Supabase Authentication
+## What The App Does
 
----
+Roadmap Gen helps students:
 
-## Prerequisites
+- Generate personalized college planning roadmaps based on grade level, GPA, interests, activities, testing, and goals
+- Receive AI-powered essay feedback with structured scoring and actionable revision advice
+- Explore scholarships through a searchable and filterable scholarship experience
+- Save roadmaps and essay results to a personal dashboard
+- Sign in securely and access their data across sessions
 
-- Node.js 18+ and npm
-- Python 3.9+
-- OpenAI API key
-- Supabase account (free tier works!)
+## Why It Exists
 
----
+Applying to college can feel overwhelming, especially for students who do not have easy access to mentors, counselors, or structured planning tools. Roadmap Gen is designed to make that process feel more accessible by combining guidance, organization, and feedback into a single product experience.
 
-## 🆕 Authentication Setup
+Rather than acting like a generic chatbot, the application aims to produce concrete next steps students can actually use.
 
-This app now includes user authentication! See [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) for complete setup instructions.
+## Core Experience
 
-**Quick setup:**
+The website is centered around three main workflows:
 
-1. Create a Supabase project at [supabase.com](https://supabase.com)
-2. Run the SQL schema from `SUPABASE_SETUP.md`
-3. Add Supabase credentials to your `.env` files
+### 1. Personalized Roadmaps
 
----
+Students enter background information such as academic performance, extracurriculars, testing, interests, and college goals. The platform then generates a structured roadmap with:
 
-## Environment
+- a personalized summary
+- college list suggestions
+- academic recommendations
+- extracurricular suggestions
+- a time-based action plan
 
-Create two env files:
+### 2. Essay Feedback
 
-- Backend `backend/.env`
+Students can paste in a college essay and receive AI-generated feedback that scores the writing across multiple dimensions and returns specific improvement guidance.
 
-```
-OPEN_AI_KEY=your_openai_api_key
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_KEY=your_service_role_secret_key
-```
+### 3. Scholarship Discovery
 
-- Frontend `frontend/.env`
+Students can browse scholarship opportunities, filter them, and explore relevant funding options from within the same platform.
 
-```
-VITE_BACKEND=http://localhost:8000
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your_anon_public_key
-```
+## Product Highlights
 
-Note: The backend currently allows CORS from `http://localhost:5177`. Either run Vite on port 5177 (recommended below) or add `http://localhost:5173` to the allowed origins in `backend/main.py`.
+- Full-stack application with a dedicated frontend and backend
+- Secure authentication and persistent user data
+- AI-generated outputs stored to user accounts for later review
+- Dashboard experience for revisiting roadmaps and essays
+- Designed around college readiness, not just generic AI output
 
----
+## Tech Stack
 
-## Local Development
+### Frontend
 
-### 1) Backend
+- React
+- Vite
+- Tailwind CSS
+- Supabase Auth
+
+### Backend
+
+- FastAPI
+- Groq API
+- Supabase
+- PostgreSQL
+
+## Architecture Overview
+
+The application is split into a React frontend and a FastAPI backend.
+
+- The frontend handles the user experience, forms, routing, authentication state, and dashboard views
+- The backend handles authenticated API requests, AI prompt orchestration, rate limiting, and persistence
+- Supabase manages authentication and database storage
+- Groq powers essay feedback and roadmap generation
+
+The backend is organized into:
+
+- `routers` for API endpoints
+- `schemas` for request and response models
+- `services` for AI and business logic
+- `repositories` for database access
+- `core` and `dependencies` for shared config, clients, and auth
+
+## Current Feature Set
+
+- User authentication with Supabase
+- Personalized roadmap generation
+- AI essay scoring and feedback
+- Saved roadmaps and essays dashboard
+- Scholarship browsing and filtering
+- Rate-limited AI endpoints
+
+## Future Direction
+
+The project can grow into a much stronger student platform over time through:
+
+- improved prompt evaluation and model quality testing
+- analytics on roadmap and essay usage
+- smarter scholarship ingestion pipelines
+- background jobs for async AI and data workflows
+- stronger personalization and progress tracking
+- admin and moderation tools
+
+## Running The Project
+
+If you want to run the project locally:
+
+### Backend
 
 ```bash
 cd backend
@@ -68,114 +117,31 @@ pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
-### 2) Frontend
+### Frontend
 
 ```bash
 cd frontend
 npm install
-# run on 5177 to match backend CORS allowlist
-npm run dev -- --port 5177
+npm run dev
 ```
 
-Frontend will print the local URL (e.g., http://localhost:5177). Ensure it matches the backend CORS settings.
+## Environment Variables
 
----
+### Backend
 
-## Build
-
-Frontend production build:
-
-```bash
-cd frontend
-npm run build
-```
-
----
-
-## API Reference (Backend)
-
-Base URL (local): `http://localhost:8000`
-
-**Note**: All endpoints below require authentication. Include `Authorization: Bearer <token>` header.
-
-- POST `/generate`
-
-  - Description: Generate a personalized roadmap (requires auth)
-  - Headers: `Authorization: Bearer <supabase-jwt-token>`
-  - Body (JSON):
-    ```json
-    {
-      "gpa": "3.8",
-      "grade": "11",
-      "interests": "computer science, math",
-      "activities": "robotics club, tutoring",
-      "demographics": "first-gen, low-income",
-      "testing": "SAT 1450 practice",
-      "collegeGoals": "T20 CS programs",
-      "classes": "AP CS A, AP Calc BC"
-    }
-    ```
-  - Response: `{ "roadmap": string }`
-
-- POST `/essay`
-
-  - Description: Get supportive, constructive essay feedback (requires auth)
-  - Headers: `Authorization: Bearer <supabase-jwt-token>`
-  - Body (JSON):
-    ```json
-    {
-      "grade": "12",
-      "prompt": "Tell us about a challenge...",
-      "essay": "<essay text>",
-      "program": "UC PIQ / Common App"
-    }
-    ```
-  - Response: `{ "feedback": string, "id": string }`
-
-- GET `/roadmaps`
-
-  - Description: Get all saved roadmaps for authenticated user
-  - Headers: `Authorization: Bearer <supabase-jwt-token>`
-  - Response: `{ "roadmaps": array }`
-
-- GET `/essays`
-  - Description: Get all saved essays for authenticated user
-  - Headers: `Authorization: Bearer <supabase-jwt-token>`
-  - Response: `{ "essays": array }`
-
----
-
-## Frontend Integration
-
-The frontend reads `VITE_BACKEND` and calls:
-
-- `POST {VITE_BACKEND}/generate`
-- `POST {VITE_BACKEND}/essay`
-
-It also loads `public/scholarships.json` directly from the frontend.
-
----
-
-## Deployment
-
-### Backend (Render)
-
-`backend/render.yaml` is configured for Render:
-
-- Build: `pip install -r requirements.txt`
-- Start: `uvicorn main:app --host 0.0.0.0 --port 10000`
-- Env var required: `OPEN_AI_KEY`
-
-After deployment, set the frontend `VITE_BACKEND` to the Render service URL.
+- `GROQ_API_KEY`
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_KEY`
+- `DEV_MODE` optional
+- `CORS_ORIGINS` optional
 
 ### Frontend
 
-Deploy the built `frontend/dist` with any static hosting (e.g., Vercel, Netlify). Ensure `VITE_BACKEND` is set at build time to the deployed backend URL.
+- `VITE_BACKEND`
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+- `VITE_DEV_MODE` optional
 
----
+## Project Status
 
-## Troubleshooting
-
-- CORS errors: Ensure the frontend origin (port) is listed in `CORSMiddleware` in `backend/main.py`, or run Vite on 5177 as shown.
-- 401/403 from OpenAI: Verify `OPEN_AI_KEY` in `backend/.env` and that the key has permissions/usage available.
-- Network errors from frontend: Confirm `VITE_BACKEND` is set and the backend is reachable.
+Roadmap Gen is actively evolving from a hackathon-style project into a more production-ready platform with stronger backend structure, cleaner API boundaries, and room for richer student-facing features.
