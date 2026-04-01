@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Academic Excellence Scholarship",
+    "description": "For students demonstrating academic excellence",
+    "link": "https://www.utdallas.edu/enroll/freshman/aes/",
+    "eligibility": [
+      "high-achieving students"
+    ],
+    "application_open": null,
+    "deadline": null,
+    "amount": null
+  },
+  {
+    "name": "McDermott Scholars",
+    "description": "For students demonstrating exceptional academic and extracurricular achievements",
+    "link": "https://www.utdallas.edu/mcdermott/",
+    "eligibility": [
+      "high-achieving students"
+    ],
+    "application_open": null,
+    "deadline": null,
+    "amount": null
+  },
+  {
+    "name": "Transfer Student Scholarship",
+    "description": "For transfer students demonstrating academic excellence",
+    "link": "https://www.utdallas.edu/enroll/transfer/scholarships",
+    "eligibility": [
+      "transfer students"
+    ],
+    "application_open": null,
+    "deadline": null,
+    "amount": null
+  }
+]
