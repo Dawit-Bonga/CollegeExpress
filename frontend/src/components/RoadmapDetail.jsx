@@ -26,26 +26,26 @@ function RoadmapDetail() {
       const token = await getToken();
       const backendUrl = import.meta.env.VITE_BACKEND;
       
-      const response = await fetch(`${backendUrl}/roadmaps`, {
+      const response = await fetch(`${backendUrl}/roadmaps/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
+      if (response.status === 404) {
+        setError('Roadmap not found');
+        setLoading(false);
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error('Failed to fetch roadmaps');
+        throw new Error('Failed to fetch roadmap');
       }
       
       const data = await response.json();
-      const foundRoadmap = data.roadmaps?.find(r => r.id === id);
-      
-      if (foundRoadmap) {
-        // Parse the roadmap_content string
-        const parsedContent = typeof foundRoadmap.roadmap_content === 'string' 
-          ? JSON.parse(foundRoadmap.roadmap_content)
-          : foundRoadmap.roadmap_content;
-        setRoadmap(parsedContent);
-      } else {
-        setError('Roadmap not found');
-      }
+      const rawContent = data.roadmap?.roadmap_content;
+      const parsedContent = typeof rawContent === 'string'
+        ? JSON.parse(rawContent)
+        : rawContent;
+      setRoadmap(parsedContent);
       setLoading(false);
     } catch (err) {
       console.error('Error fetching roadmap:', err);

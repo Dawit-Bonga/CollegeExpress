@@ -14,7 +14,7 @@ function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { login, register, loginWithGoogle } = useAuth();
+  const { login, register, loginWithGoogle, isDevMode } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -69,6 +69,23 @@ function Login() {
         </div>
 
         <Card variant="elevated" padding="lg" className="shadow-2xl">
+          {isDevMode && (
+            <div className="mb-6 p-5 bg-amber-50 border-2 border-amber-200 text-amber-900 rounded-xl">
+              <p className="text-base font-semibold">Dev mode is enabled.</p>
+              <p className="mt-1 text-sm">
+                Protected routes use a local test session, so you can explore the app without signing into Supabase.
+              </p>
+              <Button
+                type="button"
+                variant="secondary"
+                className="mt-4"
+                onClick={() => navigate('/basicInfo')}
+              >
+                Continue with dev session
+              </Button>
+            </div>
+          )}
+
           {error && (
             <div className="mb-6 p-5 bg-red-50 border-2 border-red-200 text-red-700 rounded-xl flex items-start gap-3">
               <svg className="w-6 h-6 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">

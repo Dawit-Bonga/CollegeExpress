@@ -125,6 +125,32 @@ npm install
 npm run dev
 ```
 
+## Testing During Development
+
+If Supabase auth is getting in the way while you build, the project now supports a local dev session when:
+
+- `frontend/.env` has `VITE_DEV_MODE=true`
+- `backend/.env` has `DEV_MODE=true`
+
+In that mode:
+
+- the frontend creates a local test user so protected routes stay accessible
+- the frontend sends the `dev-token-bypass` bearer token
+- the backend accepts that token and treats the request as a dev user
+
+This is meant for local development only. Keep it off in production.
+
+### Backend Test Command
+
+You can run the backend route tests without logging into Supabase:
+
+```bash
+cd backend
+./venv/bin/python -m unittest discover -s tests -v
+```
+
+The starter tests show the pattern for bypassing auth cleanly with FastAPI dependency overrides.
+
 ## Environment Variables
 
 ### Backend

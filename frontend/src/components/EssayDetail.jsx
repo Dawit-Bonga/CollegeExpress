@@ -26,26 +26,26 @@ function EssayDetail() {
       const token = await getToken();
       const backendUrl = import.meta.env.VITE_BACKEND;
       
-      const response = await fetch(`${backendUrl}/essays`, {
+      const response = await fetch(`${backendUrl}/essays/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
+      if (response.status === 404) {
+        setError('Essay not found');
+        setLoading(false);
+        return;
+      }
       
       if (!response.ok) {
-        throw new Error('Failed to fetch essays');
+        throw new Error('Failed to fetch essay');
       }
       
       const data = await response.json();
-      const foundEssay = data.essays?.find(e => e.id === id);
-      
-      if (foundEssay) {
-        // Parse the feedback string
-        const parsedFeedback = typeof foundEssay.feedback === 'string' 
-          ? JSON.parse(foundEssay.feedback)
-          : foundEssay.feedback;
-        setEssayData(parsedFeedback);
-      } else {
-        setError('Essay not found');
-      }
+      const rawFeedback = data.essay?.feedback;
+      const parsedFeedback = typeof rawFeedback === 'string'
+        ? JSON.parse(rawFeedback)
+        : rawFeedback;
+      setEssayData(parsedFeedback);
       setLoading(false);
     } catch (err) {
       console.error('Error fetching essay:', err);
